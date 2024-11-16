@@ -3,6 +3,7 @@
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
   import Login from './lib/Login.svelte'
+  import CreateCollection from './lib/CreateCollection.svelte'
   import PocketBase from 'pocketbase';
 
   const pb = new PocketBase('http://quinilo.de:32772');
@@ -16,6 +17,8 @@
   function login() {
     loggedIn = false
   }
+
+  console.log(pb.authStore.model.collections)
 
   let exports = {
     login: login
@@ -32,9 +35,12 @@
     <button class="btn" on:click={logout()}>logout</button>
 
     <div class="flex flex-row">
-      <div class="basis-1/6">01</div>
-      <div class="basis-1/6">02</div>
+      <div class="basis-1/6 flex-col">Collections
+        <CreateCollection {exports}/>
+      </div>
+      <div class="basis-1/6">Notes</div>
       <div class="basis-4/6">03</div>
     </div>
   {/if}
+
 </main>
