@@ -26,7 +26,9 @@
 
 <div class="flex justify-center">
     <div>
-        <h1 class="text-5xl font-bold mb-5 text-green-400">Login</h1>
+        <h1 class="text-5xl font-bold mb-2 text-green-400">Login</h1>
+
+        <h1 class="mb-5">Welcome back {name}</h1>
 
         <label class="form-control w-full max-w-xs">
             <div class="label">

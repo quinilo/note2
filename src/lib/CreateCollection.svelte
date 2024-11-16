@@ -1,15 +1,25 @@
 <script>
     import PocketBase from 'pocketbase';
+    export let exports
 
     const pb = new PocketBase('http://quinilo.de:32772');
     let name
 
     function update() {
-        const data = {
+        let data = {
             "collections": [name]
         };
 
-        const record = pb.collection('note_users').update(pb.authStore.model.id, data);
+        try {
+            let c = pb.authStore.model.collections
+            c.push(name)
+
+            data = {
+                "collections": c
+            };
+        } catch (e) {}
+
+        const record = pb.collection('note_users').update(pb.authStore.model.id, data).then(exports.login());
     }
 
 </script>
@@ -29,7 +39,7 @@
         </label>
 
         <div class="modal-action">
-            <button on:click={update()} class="btn btn-success">create</button>
+            <label for="my_modal_6" on:click={update()} class="btn btn-success">create</label>
             <label for="my_modal_6" class="btn">close</label>
         </div>
     </div>
