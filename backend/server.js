@@ -72,6 +72,16 @@ app.get("/api/createNote/:categorie", (req, res) => {
     res.send("success")
 })
 
+app.get("/api/notes/:categorie", (req, res) => {
+    db.getNotes(req.params.categorie, (err, users) => {
+        if (err) {
+          console.error('error:', err.message);
+        } else {
+          res.json(users)
+        }
+      });
+})
+
 /*
   AUTH
 */

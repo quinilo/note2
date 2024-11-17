@@ -65,6 +65,17 @@ class Database {
         );
     }
 
+    getNotes(categorie, callback) {
+        db.all(`SELECT * FROM notes WHERE categorie = ?`, categorie, (err, rows) => {
+            if (err) {
+        
+              callback(err, null);
+            } else {
+              callback(null, rows);
+            }
+          });
+    }
+
     getDb() {
         return db
     }
