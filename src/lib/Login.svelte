@@ -1,26 +1,28 @@
 <script>
-    import PocketBase from 'pocketbase';
+    import axios from 'axios';
     export let exports
 
     let name = ""
     let password = ""
 
     async function auth() {
-        const pb = new PocketBase('http://quinilo.de:32772');
 
         let e = document.getElementById("btn")
 
         e.disabled = true;
         e.innerHTML = e.innerHTML + "<span class=\"loading loading-spinner loading-xs\"></span>"
 
-        const authData = await pb.collection('note_users').authWithPassword(
-            name,
-            password,
-        );
-
-        if (authData.token !== undefined) {
-            exports.login()
-        }
+        axios.post('http://localhost:3003/login', {
+            name: name,
+            password: password
+        }, {
+            withCredentials: true
+        }).then(function (response) {
+            console.log(response);
+            if (response.data === "success") {
+                exports.login()
+            }
+        })
     }
 </script>
 
