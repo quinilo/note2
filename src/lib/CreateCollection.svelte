@@ -1,25 +1,25 @@
 <script>
     import PocketBase from 'pocketbase';
+    import axios from "axios";
     export let exports
 
-    const pb = new PocketBase('http://quinilo.de:32772');
-    let name
+    const backend = "http://localhost:3003"
+    let name = ""
 
     function update() {
-        let data = {
-            "collections": [name]
-        };
 
         try {
-            let c = pb.authStore.model.collections
-            c.push(name)
+            axios.get(backend + "/api/categories", {withCredentials: true}).then((response) => {
+                let c = response.data;
+                c.push(name);
 
-            data = {
-                "collections": c
-            };
+                axios.post(backend + "/api/setCategories", {categories: c}, {withCredentials: true}).then((response1) => {
+                    console.log(response1.data)
+                    window.location.reload();
+                })
+            })
         } catch (e) {}
 
-        const record = pb.collection('note_users').update(pb.authStore.model.id, data).then(exports.login());
     }
 
 </script>

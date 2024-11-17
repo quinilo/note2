@@ -29,6 +29,7 @@ app.use(session({
         maxAge: 60000 * 60,
     }
 }));
+//tauri://localhost
 app.use(cors({
     origin: 'http://localhost:1420',
     credentials: true,
@@ -52,19 +53,23 @@ app.get("/api/hello-world", (req, res) => {
     res.send("hello world!")
 })
 
-/*app.get("/api/blogs/:name/articles", (req, res) => {
-    res.json({message: getFolderNames("data")}
-})*/
+app.post("/api/setCategories", (req, res) => {
+    db.setCategories(req.session.username, req.body.categories);
+    res.send("success")
+})
 
-app.get("/name/:cookie", (req, res) => {
-    const data = jwt.decode(getTokenById(req.params.cookie))
+app.get("/api/categories", (req, res) => {
+    db.getCategories(req.session.username, (err, categories) => {
+        if (err) {
+            console.error('Fehler:', err.message);
+        }
+        res.send(categories)
+    })
+})
 
-    if (data == null) {
-        res.json({name: "undefined"})
-    } else {
-        res.json({name: data.preferred_username})
-    }
-
+app.get("/api/createNote/:categorie", (req, res) => {
+    db.createNote("New note", "Hello world", req.params.categorie)
+    res.send("success")
 })
 
 /*
