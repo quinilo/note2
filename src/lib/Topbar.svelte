@@ -1,5 +1,15 @@
 <script>
+    import axios from "axios";
+
     let themes = ["note2", "finn", "coffee", "forest", "black", "cyberpunk", "light"]
+    let user = ""
+    export let exports
+
+    axios.get("http://localhost:3003/api/user/name", {
+        withCredentials: true
+    }).then(function (response) {
+        user = response.data
+    })
 </script>
 
 <div class="navbar bg-base-200 mb-4">
@@ -29,8 +39,8 @@
         </div>
     </div>
     <div class="navbar-center">
-        <h1 class="font-bold text-xl">not logged in</h1>
-        <button class="btn " on:click={() => logout()}>logout</button>
+        <h1 class="font-bold text-xl">{user}</h1>
+        <button class="btn " on:click={() => exports.logout()}>logout</button>
     </div>
     <div class="navbar-end">
         <div class="dropdown">

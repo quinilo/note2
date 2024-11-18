@@ -116,7 +116,7 @@
   {:else}
 
     {#if !fullScreen}
-    <Topbar />
+    <Topbar {exports} />
     {/if}
 
     <div class="flex flex-row">

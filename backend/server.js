@@ -53,6 +53,10 @@ app.get("/api/hello-world", (req, res) => {
     res.send("hello world!")
 })
 
+app.get("/api/user/name", (req, res) => {
+    res.send(req.session.username)
+})
+
 app.post("/api/setCategories", (req, res) => {
     db.setCategories(req.session.username, req.body.categories);
     res.send("success")
