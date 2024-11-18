@@ -137,6 +137,10 @@ app.get("/check/:cookie", (req, res) => {
     res.send(isSessionValid(req.params.cookie))
 })
 
+app.get("/note2-ping", (req, res) => {
+    res.send("pong!")
+})
+
 function isSessionValid(id) {
     const session = sessions.find(session => session.id === id);
     return session !== undefined;
