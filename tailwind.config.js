@@ -21,6 +21,17 @@ export default {
           "warning": "#dc2626",
           "error": "#ff0000",
         },
+        finn: {
+          "primary": "#101317",
+          "secondary": "#4fd485",
+          "accent": "#4fd485",
+          "neutral": "#101317",
+          "base-100": "#101317",
+          "info": "#4fd485",
+          "success": "#4fd485",
+          "warning": "#4fd485",
+          "error": "#4fd485"
+        }
       },
         "dark", "coffee", "forest", "black", "cyberpunk", "light"],
   },

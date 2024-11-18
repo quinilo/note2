@@ -82,7 +82,10 @@ app.get("/api/notes/:categorie", (req, res) => {
       });
 })
 
-app.get("/api/setNote", (req, res) => {
+app.post("/api/updateNote/:id", (req, res) => {
+    console.log(req.body)
+    db.updateNote(req.params.id, req.body.name, req.body.content);
+    res.send("success")
 })
 
 /*

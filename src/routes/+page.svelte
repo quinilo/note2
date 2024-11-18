@@ -23,6 +23,7 @@
   let collection;
   let fontSize = 16;
   let fullScreen = false;
+  let showAlert = false;
 
   function logout() {
     loggedIn = false;
@@ -67,7 +68,18 @@
   }
 
   function saveNote() {
+    axios.post(backend + "/api/updateNote/" + note.id, {
+      name: note.name,
+      content: note.content
+    }, {
+      withCredentials: true
+    }).then(function (response) {
+      showAlert = true
 
+      setTimeout(() => {
+        showAlert = false;
+      }, 3000);
+    })
   }
 
   function toggleFullScreen() {
@@ -92,6 +104,15 @@
 </script>
 
 <main class="app">
+
+  {#if showAlert}
+  <div class="toast">
+    <div class="alert alert-info">
+      <span>Updated successful!</span>
+    </div>
+  </div>
+  {/if}
+
   {#if !loaded}
     <h1>Loading note2...</h1>
   {/if}
@@ -111,8 +132,7 @@
           <div>
             <button
               class="btn btn-ghost mb-3"
-              on:click={() => loadCollection(col)}
-            >
+              on:click={() => loadCollection(col)}>
               {col}
             </button>
           </div>
@@ -120,7 +140,7 @@
         <CreateCollection {exports} />
       </div>
       <div class="basis-1/6 flex-col">
-        Notes
+        {collection}
         {#each notes as n}
           <div>
             <button on:click={() => openNote(n)} class="btn btn-ghost mb-3">
@@ -138,6 +158,7 @@
       </div>
       {/if}
       <div class="w-full flex-col">
+
         Note
         {#if note}
         <div>
@@ -167,7 +188,7 @@
         </div>
         <div>
           <button on:click={() => toggleFullScreen()} class="btn btn-ghost">full screen</button>
-          <button class="btn btn-success">save</button>
+          <button class="btn btn-success" on:click={() => saveNote()}>save</button>
         </div>
         {/if}
       </div>

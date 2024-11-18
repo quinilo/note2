@@ -76,6 +76,15 @@ class Database {
           });
     }
 
+    updateNote(id, newName, newContent) {
+        const sql = `UPDATE notes SET name = ?, content = ? WHERE id = ?`;
+        db.run(sql, [newName, newContent, id], function (err) {
+            if (err) {
+                return console.error('error while updating note:', err.message);
+            }
+        });
+    }
+
     getDb() {
         return db
     }

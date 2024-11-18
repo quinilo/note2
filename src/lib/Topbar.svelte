@@ -1,5 +1,5 @@
 <script>
-    let themes = ["note2", "coffee", "forest", "black", "cyberpunk", "light"]
+    let themes = ["note2", "finn", "coffee", "forest", "black", "cyberpunk", "light"]
 </script>
 
 <div class="navbar bg-base-200 mb-4">
