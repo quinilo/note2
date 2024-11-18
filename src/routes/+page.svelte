@@ -5,6 +5,7 @@
   import viteLogo from "../assets/svelte.svg";
   import Counter from "../lib/Counter.svelte";
   import Login from "../lib/Login.svelte";
+  import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
   import "../app.css";
   import axios from "axios";
@@ -18,8 +19,10 @@
    */
   let collections;
   let notes = [];
+  let note;
   let collection;
   let fontSize = 16;
+  let fullScreen = false;
 
   function logout() {
     loggedIn = false;
@@ -59,8 +62,22 @@
       });
   }
 
+  function openNote(n) {
+    note = n
+  }
+
+  function saveNote() {
+
+  }
+
+  function toggleFullScreen() {
+    fullScreen = !fullScreen;
+  }
+
   let exports = {
     login: login,
+    logout: logout,
+
   };
 
   //Check login
@@ -83,9 +100,11 @@
       <Login {exports} />
     {/if}
   {:else}
-    <button class="btn" on:click={() => logout()}>logout</button>
+
+    <Topbar />
 
     <div class="flex flex-row">
+      {#if !fullScreen}
       <div class="basis-1/6 flex-col">
         Collections
         {#each collections as col}
@@ -102,10 +121,10 @@
       </div>
       <div class="basis-1/6 flex-col">
         Notes
-        {#each notes as note}
+        {#each notes as n}
           <div>
-            <button class="btn btn-ghost mb-3">
-              {note.name}
+            <button on:click={() => openNote(n)} class="btn btn-ghost mb-3">
+              {n.name}
             </button>
           </div>
         {/each}
@@ -117,12 +136,15 @@
           {/if}
         </div>
       </div>
-      <div class="basis-4/6 flex-col">
+      {/if}
+      <div class="w-full flex-col">
         Note
+        {#if note}
         <div>
           <input
             type="text"
             placeholder="Type here"
+            bind:value={note.name}
             class="input input-bordered w-11/12 mb-4 mt-5"
           />
         </div>
@@ -130,6 +152,7 @@
           <textarea
             class="textarea textarea-success w-11/12 h-96 mb-4"
             style="font-size: {fontSize}px"
+            bind:value={note.content}
             placeholder="Bio"
           ></textarea>
         </div>
@@ -142,6 +165,11 @@
             bind:value={fontSize}
           />
         </div>
+        <div>
+          <button on:click={() => toggleFullScreen()} class="btn btn-ghost">full screen</button>
+          <button class="btn btn-success">save</button>
+        </div>
+        {/if}
       </div>
     </div>
   {/if}

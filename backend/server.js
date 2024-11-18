@@ -82,6 +82,9 @@ app.get("/api/notes/:categorie", (req, res) => {
       });
 })
 
+app.get("/api/setNote", (req, res) => {
+})
+
 /*
   AUTH
 */

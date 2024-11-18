@@ -7,7 +7,22 @@ export default {
   },
   plugins: [require('daisyui'),],
   daisyui: {
-    themes: ["dark"],
+    darkTheme: 'note2',
+    themes: [
+      {
+        note2: {
+          "primary": "#3a3a3a",
+          "secondary": "#99f6e4",
+          "accent": "#00ffff",
+          "neutral": "#f3f4f6",
+          "base-100": "#101317",
+          "info": "#507251",
+          "success": "#75fc75",
+          "warning": "#dc2626",
+          "error": "#ff0000",
+        },
+      },
+        "dark", "coffee", "forest", "black", "cyberpunk", "light"],
   },
 }
 
