@@ -24,6 +24,7 @@
   let fontSize = 16;
   let fullScreen = false;
   let showAlert = false;
+  let modal = false;
 
   function logout() {
     loggedIn = false;
@@ -105,14 +106,6 @@
 
 <main class="app">
 
-  {#if showAlert}
-  <div class="toast">
-    <div class="alert alert-info">
-      <span>Updated successful!</span>
-    </div>
-  </div>
-  {/if}
-
   {#if !loaded}
     <h1>Loading note2...</h1>
   {/if}
@@ -122,7 +115,9 @@
     {/if}
   {:else}
 
+    {#if !fullScreen}
     <Topbar />
+    {/if}
 
     <div class="flex flex-row">
       {#if !fullScreen}
@@ -172,7 +167,7 @@
         <div>
           <textarea
             class="textarea textarea-success w-11/12 h-96 mb-4"
-            style="font-size: {fontSize}px"
+            style="height: 55vh; font-size: {fontSize}px"
             bind:value={note.content}
             placeholder="Bio"
           ></textarea>
@@ -187,10 +182,34 @@
           />
         </div>
         <div>
-          <button on:click={() => toggleFullScreen()} class="btn btn-ghost">full screen</button>
-          <button class="btn btn-success" on:click={() => saveNote()}>save</button>
+          <button on:click={() => toggleFullScreen()} class="btn btn-ghost">Full screen</button>
+          {#if !fullScreen}
+          <button class="btn btn-success m-2" on:click={() => saveNote()}>Save</button>
+          <button class="btn btn-warning" on:click={() => modal.showModal()}>Delete</button>
+          {/if}
         </div>
+
+          <dialog bind:this={modal} id="my_modal_1" class="modal">
+            <div class="modal-box">
+              <h3 class="text-lg font-bold">Delete {note.name}?</h3>
+              <p class="mx-9">This note will be permanently deleted and you cant restore it!</p>
+              <div class="modal-action">
+                <form method="dialog">
+                  <button class="btn m-3">Close</button>
+                  <button class="btn btn-warning">Delete</button>
+                </form>
+              </div>
+            </div>
+          </dialog>
         {/if}
+      </div>
+    </div>
+  {/if}
+
+  {#if showAlert}
+    <div class="toast">
+      <div class="alert alert-info">
+        <span class="loading loading-dots loading-md"></span><span class="font-bold">Updated successful!</span>
       </div>
     </div>
   {/if}
