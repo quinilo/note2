@@ -29,7 +29,10 @@
   backend = cookie()
 
   function logout() {
-    loggedIn = false;
+    axios.get(backend + "/api/logout", { withCredentials: true })
+            .then((response) => {
+              loggedIn = false;
+            });
   }
 
   function login() {

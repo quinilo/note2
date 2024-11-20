@@ -12,7 +12,7 @@
         e.disabled = true;
         e.innerHTML = e.innerHTML + "<span class=\"loading loading-spinner loading-xs\"></span>"
 
-        axios.post(exports.cookie(), {
+        axios.post(exports.cookie() + "/login", {
             name: name,
             password: password
         }, {

@@ -96,9 +96,9 @@ app.post("/api/updateNote/:id", (req, res) => {
   AUTH
 */
 
-app.get("/logout/:cookie", async (req, res) => {
-    console.log("LOGOUT: " + req.params.cookie)
-    deleteSession(req.params.cookie)
+app.get("/api/logout", async (req, res) => {
+    deleteSession(req.session.sessionId)
+    res.send("success")
 })
 
 app.post("/login", (req, res) => {
@@ -158,7 +158,6 @@ function getUserById(id) {
 function deleteSession(sessionId) {
     const index = sessions.findIndex(session => session.id === sessionId);
     if (index !== -1) {
-        console.log("delsting......")
         sessions.splice(index, 1);
     }
 }
