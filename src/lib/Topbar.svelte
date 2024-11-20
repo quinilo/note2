@@ -5,7 +5,7 @@
     let user = ""
     export let exports
 
-    axios.get("http://localhost:3003/api/user/name", {
+    axios.get(exports.cookie() + "/api/user/name", {
         withCredentials: true
     }).then(function (response) {
         user = response.data

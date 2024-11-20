@@ -3,7 +3,7 @@
     import axios from "axios";
     export let exports
 
-    const backend = "http://localhost:3003"
+    const backend = exports.cookie()
     let name = ""
 
     function update() {

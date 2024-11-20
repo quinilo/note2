@@ -11,10 +11,7 @@
         note2
       </span>
             <p class="mt-6">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officiis eum
-                provident alias ipsam aperiam distinctio similique nulla, commodi error
-                eaque ipsa pariatur repellat, dolorum unde harum saepe neque
-                necessitatibus mollitia.
+                This app was developed by quinilo with Tauri, Svelte, Tailwindcss and Daisyui
             </p>
 
             <a class="btn btn-warning mt-5" href="/setup">Reset app</a>

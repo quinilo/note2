@@ -7,10 +7,9 @@
   import Login from "../lib/Login.svelte";
   import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
-  import "../app.css";
   import axios from "axios";
 
-  const backend = "http://localhost:3003";
+  let backend = "http://localhost:3003";
 
   let loggedIn = false;
   let loaded = false;
@@ -25,6 +24,9 @@
   let fullScreen = false;
   let showAlert = false;
   let modal = false;
+
+  if (cookie() === null) window.location.href = "/setup"
+  backend = cookie()
 
   function logout() {
     loggedIn = false;
@@ -90,8 +92,21 @@
   let exports = {
     login: login,
     logout: logout,
+    cookie: cookie
 
   };
+
+  function cookie() {
+    const nameEQ = `url=`;
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      let cookie = cookies[i].trim();
+      if (cookie.startsWith(nameEQ)) {
+        return cookie.substring(nameEQ.length);
+      }
+    }
+    return null;
+  }
 
   //Check login
   axios
@@ -115,9 +130,7 @@
     {/if}
   {:else}
 
-    {#if !fullScreen}
     <Topbar {exports} />
-    {/if}
 
     <div class="flex flex-row">
       {#if !fullScreen}

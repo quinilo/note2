@@ -1,5 +1,22 @@
 <script>
-    let url
+    import axios from "axios";
+
+    let url = ""
+
+    function connect() {
+
+        axios.get(url + "/note2-ping").then((response) => {if (response.data === "pong!") {
+            setCookie("url", url, 350)
+            window.location.href = "/"
+        }})
+    }
+
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = `expires=${date.toUTCString()}`;
+        document.cookie = `${name}=${value}; ${expires}; path=/`;
+    }
 </script>
 
 <main class="app">
@@ -18,7 +35,7 @@
                 <input bind:value={url} type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
             </label>
 
-            <button on:click={auth()} id="btn" class="btn btn-outline btn-success mt-5 green-400">CONNECT</button>
+            <button on:click={() => connect()} id="btn" class="btn btn-outline btn-success mt-5 green-400">CONNECT</button>
         </div>
     </div>
 </main>
