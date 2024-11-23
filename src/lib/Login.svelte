@@ -4,6 +4,7 @@
 
     let name = ""
     let password = ""
+    let showAlert = false
 
     async function auth() {
 
@@ -21,6 +22,14 @@
             console.log(response);
             if (response.data === "success") {
                 exports.login()
+            } else {
+                showAlert = true
+                e.disabled = false;
+                e.innerHTML = "LOGIN"
+
+                setTimeout(() => {
+                    showAlert = false;
+                }, 3000);
             }
         })
     }
@@ -46,6 +55,14 @@
             <input bind:value={password} type="password" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
         </label>
 
-        <button on:click={auth()} id="btn" class="btn btn-outline btn-success mt-5 green-400">LOGIN</button>
+        <button on:click={() => {auth()}} id="btn" class="btn btn-outline btn-success mt-5 green-400">LOGIN</button>
     </div>
+
+    {#if showAlert}
+        <div class="toast">
+            <div class="alert alert-warning">
+                <span class="loading loading-dots loading-md"></span><span class="font-bold">Login failed!</span>
+            </div>
+        </div>
+    {/if}
 </div>
