@@ -217,6 +217,8 @@
               </div>
             </div>
           </dialog>
+        {:else}
+          <h1 class="font-bold accent-white text-5xl mt-16">Welcome back!</h1>
         {/if}
       </div>
     </div>
