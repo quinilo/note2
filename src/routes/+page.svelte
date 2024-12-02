@@ -8,7 +8,6 @@
   import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
   import axios from "axios";
-  import Input from "$lib/Input.svelte";
 
   let backend = "http://localhost:3003";
 
@@ -211,7 +210,7 @@
           <div
                   id="editor"
                   contenteditable="true"
-                  class="textarea textarea-success w-11/12 h-96 mb-4"
+                  class="w-11/12 h-96 mb-4 bg-base-200 mx-auto p-3 rounded-2xl"
                   style="font-size: {fontSize}px"
                   on:input={() => format()}
                   bind:innerHTML={note.content}>
@@ -268,5 +267,12 @@
   #editor {
     height: 55vh;
     text-align: left
+  }
+
+  [contenteditable="true"] {
+    border: 2px solid var(bg);
+    padding: 8px;
+    border-radius: 4px;
+    outline: none;
   }
 </style>

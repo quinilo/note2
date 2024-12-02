@@ -21,7 +21,7 @@ export default {
           "warning": "#dc2626",
           "error": "#ff0000",
         },
-        finn: {
+        gruen: {
           "primary": "#101317",
           "secondary": "#4fd485",
           "accent": "#4fd485",

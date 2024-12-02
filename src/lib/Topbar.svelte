@@ -1,7 +1,7 @@
 <script>
     import axios from "axios";
 
-    let themes = ["note2", "finn", "coffee", "forest", "black", "cyberpunk", "light"]
+    let themes = ["note2", "gruen", "coffee", "forest", "black", "cyberpunk", "light"]
     let user = ""
     export let exports
 
