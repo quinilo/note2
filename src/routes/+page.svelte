@@ -8,6 +8,7 @@
   import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
   import axios from "axios";
+  import Input from "$lib/Input.svelte";
 
   let backend = "http://localhost:3003";
 
@@ -88,6 +89,16 @@
     })
   }
 
+  function updatePreview() {
+    const textarea = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+    const lines = textarea.value.split('\n');
+
+    preview.innerHTML = lines
+            .map(line => (line.startsWith('#') ? `<span class="bold">${line}</span>` : line))
+            .join('\n');
+  }
+
   function toggleFullScreen() {
     fullScreen = !fullScreen;
   }
@@ -109,6 +120,22 @@
       }
     }
     return null;
+  }
+
+  function format() {
+    const container = document.getElementById("editor");
+
+    if (container) {
+      const divs = container.querySelectorAll("div");
+
+      divs.forEach(div => {
+        if (div.textContent.trim().startsWith("#")) {
+          div.classList.add("font-bold");
+        } else {
+          div.classList.remove("font-bold")
+        }
+      });
+    }
   }
 
   //Check login
@@ -181,12 +208,15 @@
           />
         </div>
         <div>
-          <textarea
-            class="textarea textarea-success w-11/12 h-96 mb-4"
-            style="height: 55vh; font-size: {fontSize}px"
-            bind:value={note.content}
-            placeholder="Bio"
-          ></textarea>
+          <div
+                  id="editor"
+                  contenteditable="true"
+                  class="textarea textarea-success w-11/12 h-96 mb-4"
+                  style="font-size: {fontSize}px"
+                  on:input={() => format()}
+                  bind:innerHTML={note.content}>
+
+          </div>
         </div>
         <div>
           <input
@@ -196,6 +226,7 @@
             class="range range-success"
             bind:value={fontSize}
           />
+          <div id="preview" aria-hidden="true"></div>
         </div>
         <div>
           <button on:click={() => toggleFullScreen()} class="btn btn-ghost">Full screen</button>
@@ -232,3 +263,10 @@
     </div>
   {/if}
 </main>
+
+<style>
+  #editor {
+    height: 55vh;
+    text-align: left
+  }
+</style>
