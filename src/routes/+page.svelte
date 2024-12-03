@@ -210,7 +210,7 @@
           <div
                   id="editor"
                   contenteditable="true"
-                  class="w-11/12 h-96 mb-4 bg-base-200 mx-auto p-3 rounded-2xl"
+                  class="w-11/12 h-96 mb-4 bg-base-200 mx-auto p-3 rounded-3xl"
                   style="font-size: {fontSize}px"
                   on:input={() => format()}
                   bind:innerHTML={note.content}>
@@ -232,6 +232,8 @@
           {#if !fullScreen}
           <button class="btn btn-success m-2" on:click={() => saveNote()}>Save</button>
           <button class="btn btn-warning" on:click={() => modal.showModal()}>Delete</button>
+          {:else}
+            <p>words: {note.content.split(" ").length}, sentences: {note.content.split(".").length - 1}</p>
           {/if}
         </div>
 
@@ -265,8 +267,8 @@
 
 <style>
   #editor {
-    height: 55vh;
-    text-align: left
+    min-height: 55vh;
+    text-align: left;
   }
 
   [contenteditable="true"] {
