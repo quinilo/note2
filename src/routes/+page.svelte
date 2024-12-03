@@ -50,6 +50,7 @@
 
   function loadCollection(name) {
     console.log("aaAS");
+    note = null
     collection = name;
 
     axios
@@ -250,7 +251,7 @@
             </div>
           </dialog>
         {:else}
-          <h1 class="font-bold accent-white text-5xl mt-16">Welcome back!</h1>
+          <h1 class="font-bold accent-white text-5xl mt-16">Nothing to show!</h1>
         {/if}
       </div>
     </div>

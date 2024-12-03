@@ -162,10 +162,15 @@ function deleteSession(sessionId) {
     }
 }
 
+function randomId() {
+    return Math.random().toString(33).split(".")[1];
+}
+
 /*
   START
 */
 
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Backend listening on port ${port}`)
+    console.log("Your administration password is " + randomId())
 })
