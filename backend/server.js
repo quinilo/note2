@@ -8,6 +8,7 @@ const db = new Database();
 const app = express()
 const port = 3003
 
+let pw= ""
 let sessions = [], validCredentials
 
 //DB
@@ -71,13 +72,13 @@ app.get("/api/categories", (req, res) => {
     })
 })
 
-app.get("/api/createNote/:categorie", (req, res) => {
-    db.createNote("New note", "Hello world", req.params.categorie)
+app.get("/api/createNote/:category", (req, res) => {
+    db.createNote("New note", req.session.username, "Hello world", req.params.category)
     res.send("success")
 })
 
-app.get("/api/notes/:categorie", (req, res) => {
-    db.getNotes(req.params.categorie, (err, users) => {
+app.get("/api/notes/:category", (req, res) => {
+    db.getNotes(req.params.category, req.session.username, (err, users) => {
         if (err) {
           console.error('error:', err.message);
         } else {
@@ -124,9 +125,8 @@ app.post("/login", (req, res) => {
 
                 req.session.save((err) => {
                     if (err) {
-                        console.error('Fehler beim Speichern der Session:', err);
+                        console.error('Error while saving the session: ', err);
                     }
-                    console.log('Login erfolgreich, Session gespeichert!');
                 });
 
                 res.send("success")
@@ -139,6 +139,16 @@ app.post("/login", (req, res) => {
 
 app.get("/check/:cookie", (req, res) => {
     res.send(isSessionValid(req.params.cookie))
+})
+
+app.post("/register", (req, res) => {
+    if (req.body.adminPw !== pw) {
+        res.send("invalid pw")
+        return
+    }
+
+    db.createUser(req.body.name, req.body.password)
+    res.send("success")
 })
 
 app.get("/note2-ping", (req, res) => {
@@ -171,6 +181,8 @@ function randomId() {
 */
 
 app.listen(port, () => {
+    pw = randomId();
+
     console.log(`Backend listening on port ${port}`)
-    console.log("Your administration password is " + randomId())
+    console.log(`Your administration password is ${pw}`)
 })

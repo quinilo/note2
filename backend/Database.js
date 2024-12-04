@@ -21,13 +21,20 @@ class Database {
             password TEXT NOT NULL,
             categories TEXT)`,);});
 
-            db.serialize(() => {
-                db.run(`
+        db.serialize(() => {
+            db.run(`
                 CREATE TABLE IF NOT EXISTS notes (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user TEXT NOT NULL,
                 name TEXT NOT NULL,
                 content TEXT NOT NULL,
-                categorie TEXT NOT NULL)`,);});
+                category TEXT NOT NULL)`,);});
+
+        db.serialize(() => {
+            db.run(`
+                CREATE TABLE IF NOT EXISTS shared (
+                id INTEGER,
+                note INTEGER)`,);});
             
     }
 
@@ -35,8 +42,8 @@ class Database {
         db.run(`INSERT INTO users (name, password, categories) VALUES (?, ?, ?)`, [name, pw, "[]"], function (err) {});
     }
 
-    createNote(name, content, categorie) {
-        db.run(`INSERT INTO notes (name, content, categorie) VALUES (?, ?, ?)`, [name, content, categorie], function (err) {});
+    createNote(name, user, content, category) {
+        db.run(`INSERT INTO notes (name, user, content, category) VALUES (?, ?, ?, ?)`, [name, user, content, category], function (err) {});
     }
 
     getCategories(name, callback) {
@@ -65,8 +72,8 @@ class Database {
         );
     }
 
-    getNotes(categorie, callback) {
-        db.all(`SELECT * FROM notes WHERE categorie = ?`, categorie, (err, rows) => {
+    getNotes(category, user, callback) {
+        db.all(`SELECT * FROM notes WHERE category = ? AND user = ?`, [category, user], (err, rows) => {
             if (err) {
         
               callback(err, null);

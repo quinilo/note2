@@ -32,6 +32,11 @@
     axios.get(backend + "/api/logout", { withCredentials: true })
             .then((response) => {
               loggedIn = false;
+
+              collection = null;
+              note = null;
+              notes = null;
+              collections = []
             });
   }
 
@@ -160,7 +165,9 @@
     {/if}
   {:else}
 
+    {#if !fullScreen}
     <Topbar {exports} />
+    {/if}
 
     <div class="flex flex-row">
       {#if !fullScreen}
@@ -223,7 +230,7 @@
             type="range"
             min="0"
             max="100"
-            class="range range-success"
+            class="range range-primary"
             bind:value={fontSize}
           />
           <div id="preview" aria-hidden="true"></div>

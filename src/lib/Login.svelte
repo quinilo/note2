@@ -4,6 +4,7 @@
 
     let name = ""
     let password = ""
+    let adminPw = ""
     let showAlert = false
 
     async function auth() {
@@ -31,6 +32,18 @@
                     showAlert = false;
                 }, 3000);
             }
+        })
+    }
+
+    function register() {
+        axios.post(exports.cookie() + "/register", {
+            name: name,
+            password: password,
+            adminPw: adminPw
+        }, {
+            withCredentials: true
+        }).then(function (response) {
+            console.log(response);
         })
     }
 </script>
@@ -87,8 +100,10 @@
                 <div class="label content-center">
                     <span class="label-text">Admin password</span>
                 </div>
-                <input bind:value={password} type="password" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
+                <input bind:value={adminPw} type="password" placeholder="Type here" class="input input-bordered w-full max-w-xs" />
             </label>
+
+            <button class="btn btn-success mt-4" on:click={register()}>Create</button>
 
             <p class="py-4">Press ESC key to close</p>
         </div>
