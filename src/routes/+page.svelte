@@ -3,11 +3,11 @@
 
   import svelteLogo from "../assets/svelte.svg";
   import viteLogo from "../assets/svelte.svg";
-  import Counter from "../lib/Counter.svelte";
   import Login from "../lib/Login.svelte";
   import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
   import axios from "axios";
+  import {onMount} from "svelte";
 
   let backend = "http://localhost:3003";
 
@@ -25,8 +25,10 @@
   let showAlert = false;
   let modal = false;
 
-  if (cookie() === null) window.location.href = "/setup"
-  backend = cookie()
+  onMount(() => {
+    if (cookie() === null) window.location.href = "/setup"
+    backend = cookie()
+  })
 
   function logout() {
     axios.get(backend + "/api/logout", { withCredentials: true })
@@ -47,10 +49,10 @@
 
   function updateCollections() {
     axios
-      .get(backend + "/api/categories", { withCredentials: true })
-      .then((response) => {
-        collections = response.data;
-      });
+            .get(backend + "/api/categories", { withCredentials: true })
+            .then((response) => {
+              collections = response.data;
+            });
   }
 
   function loadCollection(name) {
@@ -59,20 +61,20 @@
     collection = name;
 
     axios
-      .get(backend + "/api/notes/" + name, { withCredentials: true })
-      .then((response) => {
-        notes = response.data;
-      });
+            .get(backend + "/api/notes/" + name, { withCredentials: true })
+            .then((response) => {
+              notes = response.data;
+            });
   }
 
   function createNote() {
     axios
-      .get(backend + "/api/createNote/" + collection, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        loadCollection(collection);
-      });
+            .get(backend + "/api/createNote/" + collection, {
+              withCredentials: true,
+            })
+            .then((response) => {
+              loadCollection(collection);
+            });
   }
 
   function openNote(n) {
@@ -145,13 +147,13 @@
 
   //Check login
   axios
-    .get(backend + "/api/hello-world", { withCredentials: true })
-    .then((response) => {
-      loggedIn = response.data !== "auth failed";
-      loaded = true;
+          .get(backend + "/api/hello-world", { withCredentials: true })
+          .then((response) => {
+            loggedIn = response.data !== "auth failed";
+            loaded = true;
 
-      if (loggedIn) login();
-    });
+            if (loggedIn) login();
+          });
 </script>
 
 <main class="app">
@@ -230,7 +232,7 @@
             type="range"
             min="0"
             max="100"
-            class="range range-primary"
+            class="range range-success"
             bind:value={fontSize}
           />
           <div id="preview" aria-hidden="true"></div>

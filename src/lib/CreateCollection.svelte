@@ -1,5 +1,4 @@
 <script>
-    import PocketBase from 'pocketbase';
     import axios from "axios";
     export let exports
 

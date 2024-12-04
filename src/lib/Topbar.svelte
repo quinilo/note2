@@ -10,6 +10,14 @@
     }).then(function (response) {
         user = response.data
     })
+
+    function setCookie(name, value, days) {
+        document.documentElement.setAttribute('data-theme', value);
+        const date = new Date();
+        date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+        const expires = `expires=${date.toUTCString()}`;
+        document.cookie = `${name}=${value}; ${expires}; path=/`;
+    }
 </script>
 
 <div class="navbar bg-base-200 mb-4">
@@ -63,7 +71,7 @@
                                 name="theme-dropdown"
                                 class="theme-controller btn btn-sm btn-block btn-ghost justify-start"
                                 aria-label="{theme}"
-                                value="{theme}" />
+                                on:click={() => setCookie("theme", theme, 365)}/>
                     </li>
                 {/each}
             </ul>
