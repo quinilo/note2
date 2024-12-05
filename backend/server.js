@@ -155,6 +155,43 @@ app.get("/note2-ping", (req, res) => {
     res.send("pong!")
 })
 
+app.get("/shared/:id", (req, res) => {
+    res.send("<!DOCTYPE html>\n" +
+        "<html lang=\"de\">\n" +
+        "<head>\n" +
+        "  <meta charset=\"UTF-8\">\n" +
+        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+        "  <title>Shared note</title>\n" +
+        "  <style>\n" +
+        "    body {\n" +
+        "      background-color: #101317;\n" +
+        "      font-family: SansSerif,sans-serif;\n" +
+        "    }\n" +
+        "\n" +
+        "    .container {\n" +
+        "      text-align: center;\n" +
+        "      color: #b5b5b5;\n" +
+        "      margin-top: 80px;\n" +
+        "    }\n" +
+        "\n" +
+        "    h1  {\n" +
+        "      font-size: 50px;\n" +
+        "      color: white;\n" +
+        "    }\n" +
+        "  </style>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "\n" +
+        "<div class=\"container\">\n" +
+        "  <p>note2 • shared by quinilo</p>\n" +
+        "  <h1>Title</h1>\n" +
+        "  <div>Lorem inpsun asdn asj,dhnbkajsdhakjm,shbd akmhsb dkj</div>\n" +
+        "</div>\n" +
+        "\n" +
+        "</body>\n" +
+        "</html>")
+})
+
 function isSessionValid(id) {
     const session = sessions.find(session => session.id === id);
     return session !== undefined;

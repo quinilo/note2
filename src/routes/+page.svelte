@@ -240,8 +240,14 @@
         <div>
           <button on:click={() => toggleFullScreen()} class="btn btn-ghost">Full screen</button>
           {#if !fullScreen}
+            <div class="dropdown dropdown-hover">
+              <div tabindex="0" role="button" class="btn btn-ghost">•••</div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                <li><a>Share</a></li>
+                <li><a on:click={() => modal.showModal()} >Delete</a></li>
+              </ul>
+            </div>
           <button class="btn btn-success m-2" on:click={() => saveNote()}>Save</button>
-          <button class="btn btn-warning" on:click={() => modal.showModal()}>Delete</button>
           {:else}
             <p>words: {note.content.split(" ").length}, sentences: {note.content.split(".").length - 1}</p>
           {/if}
