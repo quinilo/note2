@@ -9,7 +9,7 @@
   import axios from "axios";
   import {onMount} from "svelte";
 
-  let backend = "http://localhost:3003";
+  let backend;
 
   let loggedIn = false;
   let loaded = false;
@@ -26,8 +26,12 @@
   let modal = false;
 
   onMount(() => {
+    console.log("C: " + cookie())
+
     if (cookie() === null) window.location.href = "/setup"
     backend = cookie()
+
+    checkLogin()
   })
 
   function logout() {
@@ -39,7 +43,7 @@
               note = null;
               notes = null;
               collections = []
-            });
+            }).catch(error => console.error('Axios error:', error.message));
   }
 
   function login() {
@@ -52,7 +56,7 @@
             .get(backend + "/api/categories", { withCredentials: true })
             .then((response) => {
               collections = response.data;
-            });
+            }).catch(error => console.error('Axios error:', error.message));
   }
 
   function loadCollection(name) {
@@ -64,7 +68,7 @@
             .get(backend + "/api/notes/" + name, { withCredentials: true })
             .then((response) => {
               notes = response.data;
-            });
+            }).catch(error => console.error('Axios error:', error.message));
   }
 
   function createNote() {
@@ -74,7 +78,7 @@
             })
             .then((response) => {
               loadCollection(collection);
-            });
+            }).catch(error => console.error('Axios error:', error.message));
   }
 
   function openNote(n) {
@@ -93,7 +97,7 @@
       setTimeout(() => {
         showAlert = false;
       }, 3000);
-    })
+    }).catch(error => console.error('Axios error:', error.message))
   }
 
   function updatePreview() {
@@ -145,21 +149,23 @@
     }
   }
 
-  //Check login
-  axios
-          .get(backend + "/api/hello-world", { withCredentials: true })
-          .then((response) => {
-            loggedIn = response.data !== "auth failed";
-            loaded = true;
+  function checkLogin() {
+    axios
+            .get(backend + "/api/hello-world", { withCredentials: true })
+            .then((response) => {
+              loggedIn = response.data !== "auth failed";
+              loaded = true;
 
-            if (loggedIn) login();
-          });
+              if (loggedIn) login();
+            }).catch(error => console.error('Axios error:', error.message));
+  }
 </script>
 
 <main class="app">
 
   {#if !loaded}
     <h1>Loading note2...</h1>
+    <a href="/setup" class="btn btn-ghost">switch server</a>
   {/if}
   {#if !loggedIn}
     {#if loaded}

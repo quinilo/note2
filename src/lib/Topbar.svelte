@@ -9,7 +9,7 @@
         withCredentials: true
     }).then(function (response) {
         user = response.data
-    })
+    }).catch(error => console.error('Axios error:', error.message))
 
     function setCookie(name, value, days) {
         document.documentElement.setAttribute('data-theme', value);
