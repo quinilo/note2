@@ -289,8 +289,8 @@
 
 <style>
   #editor {
-    min-height: 55vh;
     text-align: left;
+    height: auto;
   }
 
   [contenteditable="true"] {
