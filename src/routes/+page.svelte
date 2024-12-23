@@ -20,6 +20,7 @@
   let notes = [];
   let note;
   let collection;
+  let collectionLoaded = false;
   let fontSize = 16;
   let fullScreen = false;
   let showAlert = false;
@@ -56,18 +57,22 @@
             .get(backend + "/api/categories", { withCredentials: true })
             .then((response) => {
               collections = response.data;
+              loaded = true;
+              loggedIn = true;
             }).catch(error => console.error('Axios error:', error.message));
   }
 
   function loadCollection(name) {
-    console.log("aaAS");
     note = null
+    notes = null
     collection = name;
+    collectionLoaded = false;
 
     axios
             .get(backend + "/api/notes/" + name, { withCredentials: true })
             .then((response) => {
               notes = response.data;
+              collectionLoaded = true;
             }).catch(error => console.error('Axios error:', error.message));
   }
 
@@ -154,7 +159,6 @@
             .get(backend + "/api/hello-world", { withCredentials: true })
             .then((response) => {
               loggedIn = response.data !== "auth failed";
-              loaded = true;
 
               if (loggedIn) login();
             }).catch(error => console.error('Axios error:', error.message));
@@ -203,9 +207,18 @@
         {/each}
         <div>
           {#if collection}
-            <button on:click={() => createNote()} class="btn btn-success"
+            {#if !collectionLoaded}
+            <div class="skeleton mt-2 h-4 w-full"></div>
+            <div class="skeleton mt-2 h-4 w-20"></div>
+            <div class="skeleton mt-2 h-4 w-full"></div>
+            <div class="skeleton mt-2 h-4 w-20"></div>
+            <div class="skeleton mt-2 h-4 w-20"></div>
+            <div class="skeleton mt-2 mb-3 h-4 w-full"></div>
+            {:else}
+              <button on:click={() => createNote()} class="btn btn-success"
               >create</button
-            >
+              >
+            {/if}
           {/if}
         </div>
       </div>
