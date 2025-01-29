@@ -27,7 +27,7 @@
 
 <input type="checkbox" id="my_modal_6" class="modal-toggle" />
 <div class="modal" role="dialog">
-    <div class="modal-box">
+    <div class="modal-box w-auto">
         <h3 class="text-lg font-bold">Create a collection</h3>
 
         <label class="form-control">

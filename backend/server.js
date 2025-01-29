@@ -31,8 +31,15 @@ app.use(session({
     }
 }));
 //tauri://localhost
+const allowedOrigins = ['http://localhost:1420', 'tauri://localhost', 'https://note2.quinilo.de'];
 app.use(cors({
-    origin: 'http://localhost:1420',
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed!'));
+        }
+    },
     credentials: true,
 }));
 

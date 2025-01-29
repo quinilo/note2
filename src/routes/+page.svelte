@@ -3,6 +3,7 @@
 
   import svelteLogo from "../assets/svelte.svg";
   import viteLogo from "../assets/svelte.svg";
+  import { writable } from 'svelte/store';
   import Login from "../lib/Login.svelte";
   import Topbar from "../lib/Topbar.svelte";
   import CreateCollection from "../lib/CreateCollection.svelte";
@@ -24,7 +25,14 @@
   let fontSize = 16;
   let fullScreen = false;
   let showAlert = false;
+  let alert = "unknown message"
   let modal = false;
+  let isSmallScreen = writable(false);
+  let sessionExpired = false;
+
+  let showCollections = true;
+  let showNotes = true;
+  let showCurrentNote = true;
 
   onMount(() => {
     console.log("C: " + cookie())
@@ -33,6 +41,13 @@
     backend = cookie()
 
     checkLogin()
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
   })
 
   function logout() {
@@ -88,6 +103,18 @@
 
   function openNote(n) {
     note = n
+
+    if (isSmallScreen) {
+      showCurrentNote = true;
+      showCollections = false;
+      showNotes = false;
+    }
+  }
+
+  function closeNoteWhenSmallScreen() {
+    showCurrentNote = false;
+    showCollections = true;
+    showNotes = true;
   }
 
   function saveNote() {
@@ -99,10 +126,20 @@
     }).then(function (response) {
       showAlert = true
 
+      if (response.data === "auth failed") {
+        sessionExpired = true;
+      }
+
+      alert = "saved";
       setTimeout(() => {
         showAlert = false;
       }, 3000);
-    }).catch(error => console.error('Axios error:', error.message))
+
+      return true;
+    }).catch(error => {
+      console.error('Axios error:', error.message)
+      return false;
+    })
   }
 
   function updatePreview() {
@@ -160,12 +197,58 @@
             .then((response) => {
               loggedIn = response.data !== "auth failed";
 
+              loaded = true;
               if (loggedIn) login();
             }).catch(error => console.error('Axios error:', error.message));
   }
+
+  function checkScreenSize() {
+    isSmallScreen = window.innerWidth < 768;
+
+    if (isSmallScreen) {
+      showCollections = true;
+      showNotes = true;
+      showCurrentNote = false;
+    } else {
+      showCollections = true;
+      showNotes = true;
+      showCurrentNote = true;
+    }
+  }
+
+  async function runRepeatingTask() {
+    while (true) {
+      if (note != null) {
+        showAlert = true;
+        alert = "saving progress...";
+        await saveNote();
+      }
+      await new Promise(resolve => setTimeout(resolve, 10000));
+    }
+  }
+  runRepeatingTask();
+
 </script>
 
 <main class="app">
+
+  {#if sessionExpired}
+    <div class="modal-box mx-auto bg-red-500">
+      <h3 class="text-lg font-bold">Your session is expired and you have to login again!</h3>
+      <div class="modal-action">
+        <a on:click={window.location.href = "/"} class="btn btn-outline">Login</a>
+      </div>
+    </div>
+  {/if}
+
+  {#if isSmallScreen}
+    {#if showCurrentNote && loaded}
+      <a class="fixed top-0 left-0 btn btn-ghost m-5" href="/" on:click={() => closeNoteWhenSmallScreen()}>
+        ←
+      </a>
+      <div class="mt-5"></div>
+    {/if}
+  {/if}
 
   {#if !loaded}
     <h1>Loading note2...</h1>
@@ -178,17 +261,25 @@
   {:else}
 
     {#if !fullScreen}
-    <Topbar {exports} />
+      {#if showCollections}
+        <Topbar {exports} />
+      {/if}
     {/if}
 
     <div class="flex flex-row">
       {#if !fullScreen}
-      <div class="basis-1/6 flex-col">
-        Collections
+
+        <!--
+        COLLECTIONS
+        -->
+
+        {#if showCollections}
+      <div class="basis-1/6 flex-col mx-5">
+        <p class="font-bold">Collections</p>
         {#each collections as col}
           <div>
             <button
-              class="btn btn-ghost mb-3"
+              class="btn btn-ghost mb-3 font-normal"
               on:click={() => loadCollection(col)}>
               {col}
             </button>
@@ -196,11 +287,18 @@
         {/each}
         <CreateCollection {exports} />
       </div>
-      <div class="basis-1/6 flex-col">
-        {collection}
+        {/if}
+
+        <!--
+        NOTES IN COLLECTION
+        -->
+
+        {#if showNotes}
+      <div class="basis-1/6 flex-col mx-5">
+        <p class="font-bold">{collection}</p>
         {#each notes as n}
           <div>
-            <button on:click={() => openNote(n)} class="btn btn-ghost mb-3">
+            <button on:click={() => openNote(n)} class="btn btn-ghost mb-3 font-normal">
               {n.name}
             </button>
           </div>
@@ -223,8 +321,14 @@
         </div>
       </div>
       {/if}
-      <div class="w-full flex-col">
+      {/if}
 
+      <!--
+      NOTE
+      -->
+
+       {#if showCurrentNote}
+      <div class="w-full flex-col">
         Note
         {#if note}
         <div>
@@ -257,17 +361,15 @@
           <div id="preview" aria-hidden="true"></div>
         </div>
         <div>
-          <button on:click={() => toggleFullScreen()} class="btn btn-ghost">Full screen</button>
-          {#if !fullScreen}
-            <div class="dropdown dropdown-hover">
-              <div tabindex="0" role="button" class="btn btn-ghost">•••</div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                <li><a>Share</a></li>
-                <li><a on:click={() => modal.showModal()} >Delete</a></li>
-              </ul>
-            </div>
-          <button class="btn btn-success m-2" on:click={() => saveNote()}>Save</button>
-          {:else}
+          {#if !isSmallScreen} <button on:click={() => toggleFullScreen()} class="btn btn-ghost">Full screen</button>{/if}
+          <div class="dropdown dropdown-hover">
+            <div tabindex="0" role="button" class="btn btn-ghost">•••</div>
+            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+              <li><a>Share</a></li>
+              <li><a on:click={() => modal.showModal()} >Delete</a></li>
+            </ul>
+          </div>
+          {#if fullScreen}
             <p>words: {note.content.split(" ").length}, sentences: {note.content.split(".").length - 1}</p>
           {/if}
         </div>
@@ -288,14 +390,13 @@
           <h1 class="font-bold accent-white text-5xl mt-16">Nothing to show!</h1>
         {/if}
       </div>
+       {/if}
     </div>
   {/if}
 
   {#if showAlert}
     <div class="toast">
-      <div class="alert alert-info">
-        <span class="loading loading-dots loading-md"></span><span class="font-bold">Updated successful!</span>
-      </div>
+      <div class="mx-auto loader"></div><span class="font-bold">{alert}</span>
     </div>
   {/if}
 </main>
@@ -311,5 +412,54 @@
     padding: 8px;
     border-radius: 4px;
     outline: none;
+  }
+
+  .loader {
+    --uib-size: 80px;
+    --uib-color: white;
+    --uib-speed: 1.4s;
+    --uib-stroke: 5px;
+    --uib-bg-opacity: .1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--uib-stroke);
+    width: var(--uib-size);
+    border-radius: calc(var(--uib-stroke) / 2);
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .loader::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--uib-color);
+    opacity: var(--uib-bg-opacity);
+    transition: background-color 0.3s ease;
+  }
+
+  .loader::after {
+    content: '';
+    height: 100%;
+    width: 100%;
+    border-radius: calc(var(--uib-stroke) / 2);
+    animation: zoom var(--uib-speed) ease-in-out infinite;
+    transform: translateX(-100%);
+    background-color: var(--uib-color);
+    transition: background-color 0.3s ease;
+  }
+
+  @keyframes zoom {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 </style>

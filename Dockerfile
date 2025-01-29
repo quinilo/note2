@@ -2,11 +2,11 @@ FROM node:18 AS build
 
 WORKDIR /app
 
-COPY package*.json .
+COPY package*.json /app/
 
 RUN npm ci
 
-COPY . .
+COPY . /app/
 RUN npm run build
 RUN npm prune --production
 
